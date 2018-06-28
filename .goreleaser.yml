@@ -16,7 +16,7 @@ builds:
       - goos: darwin
         goarch: 386
     hooks:
-      pre: go-bindata -nometadata -pkg main -prefix data/ -o bindata.go data/GeoLite2-City.mmdb
+      pre: go-bindata -nometadata -pkg main -prefix data/ -o bindata.go data/GeoLite2-City.mmdb data/GeoLite2-ASN.mmdb
 puts:
   -
     mode: binary
