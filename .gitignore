@@ -13,3 +13,4 @@
 .DS_Store
 release/
 .goreleaser.yml
+bindata.go
