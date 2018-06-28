@@ -14,3 +14,4 @@
 release/
 .goreleaser.yml
 bindata.go
+dist/

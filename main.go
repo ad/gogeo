@@ -3,13 +3,13 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"fmt"
+	// "fmt"
 	"github.com/oschwald/geoip2-golang"
 	"log"
 	"net"
 	"net/http"
-	"os"
-	"strings"
+	// "os"
+	// "strings"
 )
 
 var (
@@ -59,7 +59,7 @@ func answerData() {
 
 	// if version != "dev" {
 	var data, _ = Asset("GeoLite2-City.mmdb")
-	db, _ = geoip2.FromBytes(data)
+	var db, _ = geoip2.FromBytes(data)
 	// }
 
 	for ip := range ip_req {
