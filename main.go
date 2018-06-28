@@ -19,12 +19,12 @@ var (
 	ip_res  chan IpResponse
 )
 
-type asset struct {
-	bytes []byte
-	info  os.FileInfo
-}
+// type asset struct {
+// 	bytes []byte
+// 	info  os.FileInfo
+// }
 
-var _bindata = map[string]func() (*asset, error){}
+// var _bindata = map[string]func() (*asset, error){}
 
 type IpResponse struct {
 	body []byte
@@ -55,12 +55,12 @@ func main() {
 }
 
 func answerData() {
-	var db, _ = geoip2.Open("data/GeoLite2-City.mmdb")
+	// var db, _ = geoip2.Open("data/GeoLite2-City.mmdb")
 
-	if version != "dev" {
-		var data, _ = Asset("GeoLite2-City.mmdb")
-		db, _ = geoip2.FromBytes(data)
-	}
+	// if version != "dev" {
+	var data, _ = Asset("GeoLite2-City.mmdb")
+	db, _ = geoip2.FromBytes(data)
+	// }
 
 	for ip := range ip_req {
 		log.Println(ip)
@@ -92,14 +92,14 @@ func GetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func Asset(name string) ([]byte, error) {
-	cannonicalName := strings.Replace(name, "\\", "/", -1)
-	if f, ok := _bindata[cannonicalName]; ok {
-		a, err := f()
-		if err != nil {
-			return nil, fmt.Errorf("Asset %s can't read by error: %v", name, err)
-		}
-		return a.bytes, nil
-	}
-	return nil, fmt.Errorf("Asset %s not found", name)
-}
+// func Asset(name string) ([]byte, error) {
+// 	cannonicalName := strings.Replace(name, "\\", "/", -1)
+// 	if f, ok := _bindata[cannonicalName]; ok {
+// 		a, err := f()
+// 		if err != nil {
+// 			return nil, fmt.Errorf("Asset %s can't read by error: %v", name, err)
+// 		}
+// 		return a.bytes, nil
+// 	}
+// 	return nil, fmt.Errorf("Asset %s not found", name)
+// }
