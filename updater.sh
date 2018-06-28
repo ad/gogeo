@@ -4,7 +4,7 @@ newversion=`git describe --tags \`git rev-list --tags --max-count=1\` | awk -F. 
 
 echo "${oldversion} -> ${newversion}"
 
-git tag "${newversion}" && git push --tags
+git tag "${newversion}" && git push origin --tags
 sleep 3
-goreleaser
+goreleaser --rm-dist
 rm -rf dist/
