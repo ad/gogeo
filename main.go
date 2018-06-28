@@ -7,19 +7,23 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"strings"
+	"strconv"
 )
 
 var (
 	version = "dev"
 	date    = "unknown"
-	ip_req  chan string
-	ip_res  chan IpResponse
+	ipReq  chan string
+	ipRes  chan IPResponse
 )
 
-type IpResponse struct {
+// IPResponse struct
+type IPResponse struct {
 	body []byte
 }
 
+// Geodata struct
 type Geodata struct {
 	City                         string  `json:"city"`
 	Country                      string  `json:"country"`
@@ -35,9 +39,9 @@ var port = flag.String("port", "9001", "Port to listen on")
 func main() {
 	log.Printf("Started version %s, built at %s", version, date)
 
-	ip_req = make(chan string, 5)
+	ipReq = make(chan string, 5)
 	go answerData()
-	ip_res = make(chan IpResponse, 5)
+	ipRes = make(chan IPResponse, 5)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", GetHandler)
@@ -56,7 +60,7 @@ func answerData() {
 	var dataASN, _ = Asset("GeoLite2-ASN.mmdb")
 	var dbASN, _ = geoip2.FromBytes(dataASN)
 
-	for ip := range ip_req {
+	for ip := range ipReq {
 		log.Println(ip)
 		geodata := Geodata{}
 		recordCity, _ := dbCity.City(net.ParseIP(ip))
@@ -77,22 +81,45 @@ func answerData() {
 
 		js, _ := json.Marshal(geodata)
 
-		ip_res <- IpResponse{js}
+		ipRes <- IPResponse{js}
 	}
 }
 
+// GetHandler func
 func GetHandler(w http.ResponseWriter, r *http.Request) {
 	ip := r.FormValue("ip")
 
-	if len(ip) > 0 {
-		ip_req <- ip
+	if len(ip) > 0 && isIPv4(ip) {
+		ipReq <- ip
 
 		for {
 			select {
-			case resp := <-ip_res:
+			case resp := <-ipRes:
 				w.Write(resp.body)
 				return
 			}
 		}
+	} else {
+		w.Write([]byte(`{"status": "error"}`))
 	}
+}
+
+func isIPv4(host string) bool {
+	parts := strings.Split(host, ".")
+
+	if len(parts) < 4 {
+		return false
+	}
+	
+	for _,x := range parts {
+		if i, err := strconv.Atoi(x); err == nil {
+			if i < 0 || i > 255 {
+			return false
+		}
+		} else {
+			return false
+		}
+
+	}
+	return true
 }
