@@ -1,0 +1,27 @@
+# .goreleaser.yml
+# Build customization
+builds:
+  # - main: main.go
+  - binary: gogeo
+    ldflags: -s -w -X main.version={{.Version}} -X main.date={{.Date}}
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      # - arm
+      # - arm64
+    ignore:
+      - goos: darwin
+        goarch: 386
+    hooks:
+      pre: go-bindata -nometadata -pkg main -prefix data/ -o bindata.go data/GeoLite2-City.mmdb
+puts:
+  -
+    mode: binary
+    checksum: false
+    signature: false
+archive:
+  files:
+  - none*
