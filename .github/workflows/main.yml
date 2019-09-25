@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v1
         
       - name: Create assets
-        run: go-bindata -nometadata -pkg main -prefix data/ -o bindata.go data/GeoLite2-City.mmdb data/GeoLite2-ASN.mmdb
+        run: $GOPATH/bin/go-bindata -nometadata -pkg main -prefix data/ -o bindata.go data/GeoLite2-City.mmdb data/GeoLite2-ASN.mmdb
 
       - name: Build
         env:
