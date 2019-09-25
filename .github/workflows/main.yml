@@ -11,12 +11,15 @@ jobs:
           go-version: 1.13
       
       - name: Set up requirements
-        run: go get github.com/oschwald/geoip2-golang
+        run: go get github.com/oschwald/geoip2-golang github.com/jteeuwen/go-bindata/...
 
       - name: Check out source code
         uses: actions/checkout@v1
+        
+      - name: Create assets
+        run: go-bindata -nometadata -pkg main -prefix data/ -o bindata.go data/GeoLite2-City.mmdb data/GeoLite2-ASN.mmdb
 
-      - name: Buil
+      - name: Build
         env:
           GOPROXY: "https://proxy.golang.org"
         run: go build .
